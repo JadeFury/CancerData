@@ -4,3 +4,61 @@ author: "Minhaz Khan, Truman Zheng, Navin Chandradat, Vincent La, Bobak Ahmar"
 date: "11/13/2018"
 output: pdf_document
 ---
+
+## Group number 7
+## Members:
+Minhaz Khan,
+Bobak Ahmar,
+Vincent La,
+Navin Chandradat,
+Truman Zheng
+
+## Tasks:
+data cleaning, summary of data, introduction - Truman
+
+Organizing presentation/presenting - Truman, Minhaz, Vincent
+
+Anaylizing data/performing various test - Everyone 
+(idea: each of us analize different variables)
+
+Putting everything together/conclusions - Navin, Bobak
+
+
+## Introduction
+Breast cancer is a malignant cell growth in the breast. if it is left untreated the cancer can spread to other parts of the human body and it can be very deadly. there are generally two type of tumors non-cancerous and cancerous and the difference between the two is important, Benign tumor is non-cancerous and not dangerous on its own, but a malignant tumor, means the mass is cancerous.
+
+
+## summary of the data
+```{r}
+library(tidyverse)
+```
+
+```{r}
+# preview of the data
+mydata = read_csv("Project3-Data.csv")
+mydata
+```
+```{r}
+# number of variables we have
+num_var = ncol(mydata) - 1
+num_var
+# number of observation we have
+num_obs = nrow(mydata)
+num_obs
+```
+
+```{r}
+# the number of each type of tumor
+table(mydata$diagnosis)
+```
+
+```{r}
+# small summary of a few variables
+summary(mydata$radius_mean)
+
+summary(mydata$texture_mean)
+
+summary(mydata$perimeter_mean)
+
+summary(mydata$perimeter_mean)
+```

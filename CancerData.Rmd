@@ -62,3 +62,10 @@ summary(mydata$perimeter_mean)
 
 summary(mydata$perimeter_mean)
 ```
+
+# 
+```{r}
+rad=lm(radius_mean~diagnosis, data = mydata)
+summary(rad)
+```
+

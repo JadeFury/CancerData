@@ -63,9 +63,9 @@ summary(cancer$perimeter_mean)
 summary(cancer$perimeter_mean)
 ```
 
-# 
+##Correlation matrix to observe multicollinearity 
 ```{r}
-rad=lm(radius_mean~diagnosis, data = cancer)
-summary(rad)
+
+cor(cancer[-1:-2])
 ```
 

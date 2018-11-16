@@ -35,37 +35,37 @@ library(tidyverse)
 
 ```{r}
 # preview of the data
-mydata = read_csv("Project3-Data.csv")
-mydata
+cancer = read_csv("Project3-Data.csv")
+cancer
 ```
 ```{r}
 # number of variables we have
-num_var = ncol(mydata) - 1
+num_var = ncol(cancer) - 1
 num_var
 # number of observation we have
-num_obs = nrow(mydata)
+num_obs = nrow(cancer)
 num_obs
 ```
 
 ```{r}
 # the number of each type of tumor
-table(mydata$diagnosis)
+table(cancer$diagnosis)
 ```
 
 ```{r}
 # small summary of a few variables
-summary(mydata$radius_mean)
+summary(cancer$radius_mean)
 
-summary(mydata$texture_mean)
+summary(cancer$texture_mean)
 
-summary(mydata$perimeter_mean)
+summary(cancer$perimeter_mean)
 
-summary(mydata$perimeter_mean)
+summary(cancer$perimeter_mean)
 ```
 
 # 
 ```{r}
-rad=lm(radius_mean~diagnosis, data = mydata)
+rad=lm(radius_mean~diagnosis, data = cancer)
 summary(rad)
 ```
 

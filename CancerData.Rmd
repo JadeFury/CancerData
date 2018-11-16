@@ -65,7 +65,13 @@ summary(cancer$perimeter_mean)
 
 ##Correlation matrix to observe multicollinearity 
 ```{r}
+library(caret)
+filcancer=cancer[-1:-2]
+corcer=cor(filcancer)
+corcer
 
-cor(cancer[-1:-2])
+fcor = findCorrelation(corcer, cutoff=0.9)
+fcor = sort(fcor)
+(reduced_Cancer = filcancer[,-c(fcor)])
 ```
 

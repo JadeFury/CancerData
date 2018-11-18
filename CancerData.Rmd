@@ -67,16 +67,25 @@ summary(cancer$perimeter_mean)
 ```{r}
 library(caret)
 library(smmr)
+library(tidyverse)
+library(rlist)
 filcancer=cancer[-1:-2]
 corcer=cor(filcancer)
-corcer
-
 fcor = findCorrelation(corcer, cutoff=0.9)
 fcor = sort(fcor)
 (reduced_Cancer = filcancer[,-c(fcor)])
 
 model = stack(reduced_Cancer)
 analysis_of_variance = aov(values~ind, model)
-tukey = TukeyHSD(analysis_of_variance)
+tukey = TukeyHSD(analysis_of_variance, ordered=TRUE, conf.level=0.05)
+#This is a list of all the pvalues and the corresponding pairs.
+tukeypvalues = tukey$ind[,"p adj"]
+#Here is my attempt at getting all the ones with p value less than 0.05. Plz send help
+collinearity_list = list()
+#for (i in 1:190) {
+  #if (tukeypvalues[i] < 0.05){
+  #print(i)
+  #test %>% append(collinearity_list,tukeypvalues[i])}
+#}
 ```
 

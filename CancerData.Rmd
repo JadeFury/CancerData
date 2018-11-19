@@ -114,6 +114,19 @@ example: for a unit increase in texture mean the log odd of cancer being M (vs B
 ## Discriminant Analysis
 First we have to compute a two-sample Hotelling T-Squared test and compute Bartlett's test for homogeneous covariance matrices. We must now create separate data sets for Benign and Malignant tumors.
 ```{r}
+cancer.matrix = as.matrix(cancer[,3:32])
+fit=manova(cancer.matrix~cancer$diagnosis)
+summary(fit, test="Hotelling-Lawley")
 
+library(ICSNP)
+cancer1 <- cancer[cancer[,2]=="M",3:32]
+cancer2 <- cancer[cancer[,2]=="B",3:32]
+
+HotellingsT2(cancer1,cancer2)
+
+n1 = dim(cancer1)[1]
+n2 = dim(cancer2)[1]
+source("Box_M.R")
+Box_M(cancer.matrix, n=c(n1, n2))
 ```
 

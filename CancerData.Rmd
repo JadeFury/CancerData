@@ -95,7 +95,7 @@ result
 
 ## logistic regression
 ```{r}
-# taking the only the means as a test
+# taking only the means as a test
 can = cancer[2:12]
 can
 
@@ -107,7 +107,7 @@ glm.fit = glm(diagnosis ~ texture_mean + area_mean + smoothness_mean + compactne
 
 summary(glm.fit)
 ```
-theres various information in the summary but look at the coefficients, we have estimate, SE, z-score, and p-value, the p-value that is less than 0.05 indicates significance, that those variable has an impact on either cancer being M or B (acording to this site im reading at least)
+theres various information in the summary but look at the coefficients, we have estimate, SE, z-score, and p-value, the p-value that is less than 0.05 indicates significance, that is those variable has an impact on either cancer being M or B (acording to this site im reading at least)
 example: for a unit increase in texture mean the log odd of cancer being M (vs B) increases by 0.38473
 
 

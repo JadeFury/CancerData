@@ -88,6 +88,30 @@ plot(pca2, pch=10, col="red")
 cor(filcancer, pca2)
 ```
 
+Getting the variance and standard errors:
+```{r}
+ss = reduced_Cancer[,-(14:20)]
+standard_errors = ss[,-(1:5)]
+worst_cases = reduced_Cancer[,-(1:13)]
+worst_data = data.frame(worst_cases)
+se_data = data.frame(standard_errors)
+df_texture = data.frame(cbind(text_worst=worst_data$texture_worst,text_se=se_data$texture_se))
+df_smoothness = data.frame(cbind(smooth_worst=worst_data$smoothness_worst,smooth_se=se_data$smoothness_se))
+df_compact = data.frame(cbind(compact_worst=worst_data$compactness_worst,compact_se=se_data$compactness_se))
+df_concavity = data.frame(cbind(concavity_worst=worst_data$concavity_worst,concavity_se=se_data$concavity_se))
+df_concave_points = data.frame(cbind(concave_worst=worst_data$concave.points_worst,concave_se=se_data$concave.points_se))
+df_symmetry = data.frame(cbind(symm_worst=worst_data$symmetry_worst,symm_se=se_data$symmetry_se))
+df_dimension = data.frame(cbind(dim_worst=worst_data$fractal_dimension_worst,dim_se = se_data$fractal_dimension_se))
+#If we look at the first plot of texture's worst against standard errors, we can see non constant variance due to the cone shape of the data.
+ggplot(df_texture, aes(x=text_worst, y = text_se))+geom_point()
+#Again we have a cone shape in the plot of smoothness worst versus standard error.
+ggplot(df_smoothness, aes(x=smooth_worst, y = smooth_se))+geom_point()
+ggplot(df_compact, aes(x=compact_worst, y = compact_se))+geom_point()
+ggplot(df_concavity, aes(x=concavity_worst, y = concavity_se))+geom_point()
+ggplot(df_symmetry, aes(x=symm_worst, y = symm_se))+geom_point()
+ggplot(df_concave_points, aes(x=concave_worst, y = concave_se))+geom_point()
+ggplot(df_dimension, aes(x=dim_worst, y = dim_se))+geom_point()
+```
 
 ## logistic regression
 ```{r}

@@ -90,11 +90,15 @@ cor(filcancer, pca2)
 
 Getting the variance and standard errors:
 ```{r}
-ss = reduced_Cancer[,-(14:20)]
-standard_errors = ss[,-(1:5)]
-worst_cases = reduced_Cancer[,-(1:13)]
+library(tidyverse)
+filcancer1=cancer[-1:-2]
+standard_errors = filcancer1[,11:20]
+worst_cases = filcancer1[,21:30]
 worst_data = data.frame(worst_cases)
 se_data = data.frame(standard_errors)
+df_radius = data.frame(cbind(rad_worst=worst_data$radius_worst,rad_se=se_data$radius_se))
+df_perimeter = data.frame(cbind(peri_worst=worst_data$perimeter_worst,peri_se=se_data$radius_se))
+df_area = data.frame(cbind(area_worst=worst_data$area_worst,area_se=se_data$area_se))
 df_texture = data.frame(cbind(text_worst=worst_data$texture_worst,text_se=se_data$texture_se))
 df_smoothness = data.frame(cbind(smooth_worst=worst_data$smoothness_worst,smooth_se=se_data$smoothness_se))
 df_compact = data.frame(cbind(compact_worst=worst_data$compactness_worst,compact_se=se_data$compactness_se))
@@ -102,6 +106,11 @@ df_concavity = data.frame(cbind(concavity_worst=worst_data$concavity_worst,conca
 df_concave_points = data.frame(cbind(concave_worst=worst_data$concave.points_worst,concave_se=se_data$concave.points_se))
 df_symmetry = data.frame(cbind(symm_worst=worst_data$symmetry_worst,symm_se=se_data$symmetry_se))
 df_dimension = data.frame(cbind(dim_worst=worst_data$fractal_dimension_worst,dim_se = se_data$fractal_dimension_se))
+
+
+ggplot(df_radius, aes(x=rad_worst, y = rad_se))+geom_point()
+ggplot(df_perimeter, aes(x=peri_worst, y = peri_se))+geom_point()
+ggplot(df_area, aes(x=area_worst, y = area_se))+geom_point()
 #If we look at the first plot of texture's worst against standard errors, we can see non constant variance due to the cone shape of the data.
 ggplot(df_texture, aes(x=text_worst, y = text_se))+geom_point()
 #Again we have a cone shape in the plot of smoothness worst versus standard error.

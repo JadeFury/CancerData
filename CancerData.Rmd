@@ -130,6 +130,12 @@ summary(glm.fit)
 theres various information in the summary but look at the coefficients, we have estimate, SE, z-score, and p-value, the p-value that is less than 0.05 indicates significance, that is those variable has an impact on either cancer being M or B (acording to this site im reading at least)
 example: for a unit increase in texture mean the log odd of cancer being M (vs B) increases by 0.38473
 
+```{r}
+glm.fit2 = glm(diagnosis ~ texture_mean + area_mean + smoothness_mean + concave_points_mean, data=can, family=binomial)
+
+summary(glm.fit2)
+```
+
 
 ## Discriminant Analysis
 First we have to compute a two-sample Hotelling T-Squared test and compute Bartlett's test for homogeneous covariance matrices. We must now create separate data sets for Benign and Malignant tumors.

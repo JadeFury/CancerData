@@ -78,17 +78,24 @@ as follows - in PCA we create new variables which are linear combinations of the
 ```{r}
 pca1 = prcomp(filcancer, scale=TRUE)
 summary(pca1)
-plot(pca1,type='l')
-screeplot(pca1,type = 'l')
+pr_var = ( pca1$sdev )^2 
+prop_varex = pr_var / sum( pr_var )
+plot( prop_varex, xlab = "Principal Component", ylab = "Proportion of Variance Explained", type = "b" )
+plot( cumsum( prop_varex ), xlab = "Principal Component", ylab = "Cumulative Proportion of Variance Explained", type = "b" )
+
+#plot(pca1,type='l')
+#screeplot(pca1,type = 'l')
 # From the scree plot, the elbow of the plot is the third PC but according to the correlation with the variables and its proportion of variance, it's insignificant, so we work with first 2 PCAs
-pca2 = pca1$x[,1:2]
+#pca2 = pca1$x[,1:2]
 
-plot(pca2, pch=10, col="red")
+#plot(pca2, pch=10, col="red")
 #text(pca1$x[,1:2],colnames(filcancer),cex=0.5,pos=3)
-cor(filcancer, pca2)
+#cor(filcancer, pca2)
 ```
+from plot we see that at the 7th component its almost 0% so we should pick up the first 7. also the cumulative sum over all the variance, you can see that the first 7 eigenvalues correspond to approximately 98% of the all variance. it means that there is just 2% of information being lost. so we are moving from 10 means to 7means
 
-Getting the variance and standard errors:
+
+# Getting the variance and standard errors:
 ```{r}
 library(tidyverse)
 filcancer1=cancer[-1:-2]
@@ -103,7 +110,7 @@ df_texture = data.frame(cbind(text_worst=worst_data$texture_worst,text_se=se_dat
 df_smoothness = data.frame(cbind(smooth_worst=worst_data$smoothness_worst,smooth_se=se_data$smoothness_se))
 df_compact = data.frame(cbind(compact_worst=worst_data$compactness_worst,compact_se=se_data$compactness_se))
 df_concavity = data.frame(cbind(concavity_worst=worst_data$concavity_worst,concavity_se=se_data$concavity_se))
-df_concave_points = data.frame(cbind(concave_worst=worst_data$concave.points_worst,concave_se=se_data$concave.points_se))
+df_concave_points = data.frame(cbind(concave_worst=worst_data$concave_points_worst,concave_se=se_data$concave_points_se))
 df_symmetry = data.frame(cbind(symm_worst=worst_data$symmetry_worst,symm_se=se_data$symmetry_se))
 df_dimension = data.frame(cbind(dim_worst=worst_data$fractal_dimension_worst,dim_se = se_data$fractal_dimension_se))
 

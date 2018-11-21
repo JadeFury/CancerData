@@ -68,26 +68,36 @@ summary(cancer$perimeter_mean)
 library(caret)
 library(tidyverse)
 library(rlist)
-filcancer=cancer[-1:-2]
+filcancer=cancer[3:12]
 corcer=cor(filcancer)
 fcor = findCorrelation(corcer, cutoff=0.9)
 fcor = sort(fcor)
 (reduced_Cancer = filcancer[,-c(fcor)])
 ```
+## Analyzing Standard error
+```{r}
+library(tidyverse)
+
+```
+
+
 
 ## PCA
 Attempt to perform PCA on the data. Reasoning behind attempting the procedure is
 as follows - in PCA we create new variables which are linear combinations of the old ones. These new variables should be uncorrelated, so we don't have any redundant information. We'll choose only the first m variables, in a way that accounts for as much variation as possible. In our data, we showed that there are a lot of variables that are highly correlated, so we will get rid of them. The data is in different scales (area mean and texture_worst are very far out) so we need to do the analysis on the correlation matrix.
 ```{r}
-pca1 = prcomp(reduced_Cancer, scale=TRUE)
+pca1 = prcomp(filcancer, scale=TRUE)
 pca2 = prcomp(reduced_Cancer)
 #Taking the first 7 components, since those explain 90% of total variance.
-pca3 = pca1$x[,1:7]
-summary(pca3)
+summary(pca1)
+plot(pca1,type='l')
+screeplot(pca1,type = 'l')
+pca3 = pca1$x[,1:2]
 
-plot(pca1$x[,1:7])
-text(pca1$x[,1:7],colnames(reduced_Cancer),cex=0.5,pos=3)
-cor(reduced_Cancer, pca3)
+
+plot(pca3, pch=10, col="red")
+#text(pca1$x[,1:2],colnames(filcancer),cex=0.5,pos=3)
+cor(filcancer, pca3)
 ```
 
 
@@ -101,7 +111,7 @@ can
 can$diagnosis = as.factor(can$diagnosis)
 
 # fitting the generalized linear model, fam = binomial is so that we are doing a logistic regression
-glm.fit = glm(diagnosis ~ texture_mean + area_mean + smoothness_mean + compactness_mean + concavity_mean + symmetry_mean + fractal_dimension_mean + radius_mean + perimeter_mean + concave_points_mean, data=can, family=binomial)
+glm.fit = glm(diagnosis ~ texture_mean + area_mean + smoothness_mean + compactness_mean + concavity_mean + symmetry_mean + fractal_dimension_mean + radius_mean + perimeter_mean + concave points_mean, data=can, family=binomial)
 
 summary(glm.fit)
 ```

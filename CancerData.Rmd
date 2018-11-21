@@ -126,13 +126,12 @@ ggplot(df_dimension, aes(x=dim_worst, y = dim_se))+geom_point()
 ```{r}
 # taking only the means as a test
 can = cancer[2:12]
-can
 
 # changing diagnosis from chr to factor
 can$diagnosis = as.factor(can$diagnosis)
 
 # fitting the generalized linear model, fam = binomial is so that we are doing a logistic regression
-glm.fit = glm(diagnosis ~ texture_mean + area_mean + smoothness_mean + compactness_mean + concavity_mean + symmetry_mean + fractal_dimension_mean + radius_mean + perimeter_mean + concave points_mean, data=can, family=binomial)
+glm.fit = glm(diagnosis ~ texture_mean + area_mean + smoothness_mean + compactness_mean + concavity_mean + symmetry_mean + fractal_dimension_mean + radius_mean + perimeter_mean + concave_points_mean, data=can, family=binomial)
 
 summary(glm.fit)
 ```

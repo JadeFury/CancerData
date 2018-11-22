@@ -143,13 +143,23 @@ glm.fit = glm(diagnosis ~ texture_mean + area_mean + smoothness_mean + compactne
 
 summary(glm.fit)
 ```
-theres various information in the summary but look at the coefficients, we have estimate, SE, z-score, and p-value, the p-value that is less than 0.05 indicates significance, that is those variable has an impact on either cancer being M or B (acording to this site im reading at least)
+theres various information in the summary but look at the coefficients, we have estimate, SE, z-score, and p-value, the p-value that is less than 0.05 indicates significance, that is those variable has an impact on either cancer being M or B 
 example: for a unit increase in texture mean the log odd of cancer being M (vs B) increases by 0.38473
 
+
 ```{r}
+# new model after removing insignificant variables
 glm.fit2 = glm(diagnosis ~ texture_mean + area_mean + smoothness_mean + concave_points_mean, data=can, family=binomial)
 
 summary(glm.fit2)
+```
+```{r}
+# a function to get the probability of cancer being type M
+prob = function(x1,x2,x3,x4){
+  x = exp(-23.677816 + 0.362687*x1 + 0.010342*x2 + 59.471304*x3 + 76.571210*x4)
+  pix = x/(1+x)
+  return(pix)
+}
 ```
 
 
@@ -170,5 +180,23 @@ n1 = dim(cancer1)[1]
 n2 = dim(cancer2)[1]
 source("Box_M.R")
 Box_M(cancer.matrix, n=c(n1, n2))
+```
+
+# boxplot of all the SE
+```{r}
+new = cancer[-1]
+new2 = new[,-c(2:11)]
+new3 = new2[,-c(12:21)]
+x1 = ggplot(new3, aes(x=diagnosis, y=radius_se))+geom_boxplot()
+x2 = ggplot(new3, aes(x=diagnosis, y=texture_se))+geom_boxplot()
+x3 = ggplot(new3, aes(x=diagnosis, y=perimeter_se))+geom_boxplot()
+x4 = ggplot(new3, aes(x=diagnosis, y=area_se))+geom_boxplot()
+x5 = ggplot(new3, aes(x=diagnosis, y=smoothness_se))+geom_boxplot()
+x6 = ggplot(new3, aes(x=diagnosis, y=compactness_se))+geom_boxplot()
+x7 = ggplot(new3, aes(x=diagnosis, y=concavity_se))+geom_boxplot()
+x8 = ggplot(new3, aes(x=diagnosis, y=concave_points_se))+geom_boxplot()
+x9 = ggplot(new3, aes(x=diagnosis, y=symmetry_se))+geom_boxplot()
+x10 = ggplot(new3, aes(x=diagnosis, y=fractal_dimension_se))+geom_boxplot()
+grid.arrange(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,ncol=4)
 ```
 

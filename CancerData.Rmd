@@ -182,7 +182,7 @@ HotellingsT2(cancer1,cancer2)
 n1 = dim(cancer1)[1]
 n2 = dim(cancer2)[1]
 source("Box_M.R")
-Box_M(cancer.matrix, n=c(n1, n2))
+Box_M(can.matrix, n=c(n1, n2))
 ```
 
 ```{r}

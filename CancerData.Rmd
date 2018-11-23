@@ -205,6 +205,27 @@ can$diagnosis
 
 table(can$diagnosis, predict(cancer.lda)$class)
 ```
+#Discriminant analysis with the significant variables
+```{r}
+library(MASS)
+
+cancer.lda <- lda(diagnosis ~ texture_mean + area_mean + smoothness_mean + concave_points_mean, data=can, CV=FALSE)
+cancer.lda
+
+Sp = (cov(cancer1) + cov(cancer2))/2
+mean.1 = colMeans(cancer1)
+mean.2 = colMeans(cancer2)
+a = solve(Sp)%*%(mean.1-mean.2)
+a
+
+cancer.lda$scaling/a
+
+predict(cancer.lda)$class
+
+can$diagnosis
+
+table(can$diagnosis, predict(cancer.lda)$class)
+```
 
 
 # boxplot of all the SE

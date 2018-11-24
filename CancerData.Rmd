@@ -251,7 +251,7 @@ predict(cancer.lda2)$x
 (canid = as.integer(predict(cancer.lda2)$class))
 
 plot(dscores, xlab="LD1",ylab = "Scores", pch=canid, col=canid,
-main="Discriminant Scores", xlim=c(-10, 10), ylim=c(-3, 3))
+main="Discriminant Scores", xlim=c(1, 569), ylim=c(-3, 6))
 legend("top",lev,pch=1:2,col=1:2,bty="n", legend = c("M","B"))
 ```
 #Plotting

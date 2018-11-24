@@ -254,7 +254,38 @@ plot(dscores, xlab="LD1",ylab = "Scores", pch=canid, col=canid,
 main="Discriminant Scores", xlim=c(1, 569), ylim=c(-3, 6))
 legend("top",lev,pch=1:2,col=1:2,bty="n", legend = c("M","B"))
 ```
-#Plotting
+#Plotting the Discriminant Boundary
+```{r}
+library(klaR)
+cantype <- factor(rep(c("M","B"), each=200))
+partimat(x=dscores, grouping=cantype, method="lda")
+
+```
+#Plotting the Decision boundary for all the variables
+```{r}
+library(klaR)
+cantype <- factor(rep(c("M","B"), each=200))
+partimat(x=can2[,2:5], grouping=cantype, method="lda")
+```
+#Getting the Confusion matrix and the error rate
+```{r}
+# make confusion matrix (and APER)
+confusion <- table(can2$diagnosis, predict(cancer.lda2)$class)
+
+confusion
+
+n <- sum(confusion)
+aper <- (n - sum(diag(confusion))) / n
+aper
+
+#Expected Error Rate
+cancerCV <- lda(diagnosis ~ ., data=can2, CV=TRUE)
+confusionCV <- table(can2$diagnosis, cancerCV$class)
+confusionCV
+eaer <- (n - sum(diag(confusionCV))) / n
+eaer
+```
+
 
 # boxplot of all the SE
 ```{r}

@@ -176,14 +176,33 @@ here we see that we do not have equal covariance and so we'll be using QDA inste
 ```{r}
 library(MASS)
 # spliting the data into 2 set, training and testing
-training_sample <- sample(c(TRUE, FALSE), nrow(can), replace = T, prob = c(0.6,0.4))
+(training_sample <- sample(c(TRUE, FALSE), nrow(can), replace = T, prob = c(0.6,0.4)))
 cantrain <- can[training_sample, ]
 cantest <- can[!training_sample, ]
 
 # the model
-cancer.qda <- qda(diagnosis ~ radius_mean+texture_mean+perimeter_mean+area_mean+smoothness_mean+compactness_mean+concavity_mean+concave_points_mean+symmetry_mean+fractal_dimension_mean, data=cantrain, CV=FALSE)
+cancer.qda <- qda(diagnosis ~ radius_mean+texture_mean+perimeter_mean+area_mean+smoothness_mean+compactness_mean+concavity_mean+concave_points_mean+symmetry_mean+fractal_dimension_mean, data=cantrain)
 cancer.qda
+
+#Confusion test
+confusionTest <- table(cantest$diagnosis, predict(cancer.qda, newdata=cantest)$class)
+confusionTest
+
+n <- sum(confusionTest)
+aer <- (n - sum(diag(confusionTest))) / n
+aer
+
+#Plot
+
 ```
+#Plot
+```{r}
+library(klaR)
+cantype <- factor(rep(c("M","B"), each=150))
+partimat(formula = diagnosis~radius_mean+texture_mean+perimeter_mean+area_mean+smoothness_mean+compactness_mean+concavity_mean+concave_points_mean+symmetry_mean+fractal_dimension_mean, data=can, method="qda")
+```
+
+
 ```{r}
 table(cantrain$diagnosis, predict(cancer.qda)$class)
 ```

@@ -63,7 +63,12 @@ table(cancer$diagnosis)
 
 ## PCA
 Attempt to perform PCA on the data. Reasoning behind attempting the procedure is
-as follows - in PCA we create new variables which are linear combinations of the old ones. These new variables should be uncorrelated, so we don't have any redundant information. We'll choose only the first m variables, in a way that accounts for as much variation as possible. In our data, we showed that there are a lot of variables that are highly correlated, so we will get rid of them. The data is in different scales (area mean and texture_worst are very far out) so we need to do the analysis on the correlation matrix.
+as follows - in PCA we create new variables which are linear combinations of the old ones. 
+These new variables should be uncorrelated, so we don't have any redundant information. We'll choose only the first m variables, in a 
+way that accounts for as much variation as possible. In our data, we showed that there are a lot of variables that are highly 
+correlated, so we will get rid of them. The data is in different scales (area mean and texture_worst are very far out) so we need to do 
+the analysis on the correlation matrix.
+
 ```{r}
 pca1 = prcomp(filcancer, scale=TRUE)
 summary(pca1)

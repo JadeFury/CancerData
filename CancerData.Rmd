@@ -79,9 +79,11 @@ cor(filcancer, pca2)
 ```{r}
 library(tidyverse)
 library(gridExtra)
+#Obtaining the standard errors and worst cases.
 filcancer1=cancer[-1:-2]
 standard_errors = filcancer1[,11:20]
 worst_cases = filcancer1[,21:30]
+# Setting up the data frame for each of the possible properties of the boob.
 worst_data = data.frame(worst_cases)
 se_data = data.frame(standard_errors)
 df_radius = data.frame(cbind(rad_worst=worst_data$radius_worst,rad_se=se_data$radius_se))
@@ -108,6 +110,7 @@ x7<-ggplot(df_concavity, aes(x=concavity_worst, y = concavity_se))+geom_point()
 x8<-ggplot(df_symmetry, aes(x=symm_worst, y = symm_se))+geom_point()
 x9<-ggplot(df_concave_points, aes(x=concave_worst, y = concave_se))+geom_point()
 x10<-ggplot(df_dimension, aes(x=dim_worst, y = dim_se))+geom_point()
+#Looking at the data, most points are near the the origin. However, the further stages in cancer seem to have higher standard errors. Also, most of the properties seem to follow a slightly curved distribution.
 grid.arrange(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,ncol=3)
 ```
 

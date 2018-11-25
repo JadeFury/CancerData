@@ -36,7 +36,7 @@ library(tidyverse)
 ```{r}
 # preview of the data
 cancer = read.csv("Project3-Data.csv")
-cancer
+head(cancer)
 ```
 
 ```{r}
@@ -51,18 +51,6 @@ num_obs
 ```{r}
 # the number of each type of tumor
 table(cancer$diagnosis)
-```
-
-
-##Correlation matrix to observe multicollinearity 
-```{r}
-library(caret)
-library(rlist)
-filcancer=cancer[3:12]
-corcer=cor(filcancer)
-fcor = findCorrelation(corcer, cutoff=0.9)
-fcor = sort(fcor)
-(reduced_Cancer = filcancer[,-c(fcor)])
 ```
 
 ## PCA
@@ -123,51 +111,55 @@ x10<-ggplot(df_dimension, aes(x=dim_worst, y = dim_se))+geom_point()
 grid.arrange(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,ncol=3)
 ```
 
-## logistic regression
+## fitting a generalized linear model
+with this we can determine which variable are actually important to the result and which have next to no impact on the result
 ```{r}
-# taking only the means as a test
-# can = cancer[2:12]
+can = cancer[2:12]
 
 # changing diagnosis from chr to factor
-# can$diagnosis = as.factor(can$diagnosis)
+can$diagnosis = as.factor(can$diagnosis)
 
-# fitting the generalized linear model, fam = binomial is so that we are doing a logistic regression
-# glm.fit = glm(diagnosis ~ texture_mean + area_mean + smoothness_mean + compactness_mean + concavity_mean + symmetry_mean + fractal_dimension_mean + radius_mean + perimeter_mean + concave_points_mean, data=can, family=binomial)
+# fitting the generalized linear model
+glm.fit = glm(diagnosis ~ texture_mean + area_mean + smoothness_mean + compactness_mean + concavity_mean + symmetry_mean + fractal_dimension_mean + radius_mean + perimeter_mean + concave_points_mean, data=can, family=binomial)
 
-# summary(glm.fit)
+summary(glm.fit)
 ```
 theres various information in the summary but look at the coefficients, we have estimate, SE, z-score, and p-value, the p-value that is less than 0.05 indicates significance, that is those variable has an impact on either cancer being M or B 
 example: for a unit increase in texture mean the log odd of cancer being M (vs B) increases by 0.38473
 
-
 ```{r}
 # new model after removing insignificant variables
-# glm.fit2 = glm(diagnosis ~ texture_mean + area_mean + smoothness_mean + concave_points_mean, data=can, family=binomial)
+glm.fit2 = glm(diagnosis ~ texture_mean + area_mean + smoothness_mean + concave_points_mean, data=can, family=binomial)
 
-# summary(glm.fit2)
+summary(glm.fit2)
 ```
+
 ```{r}
 # a function to get the probability of cancer being type M
-# prob = function(x1,x2,x3,x4){
-  # x = exp(-23.677816 + 0.362687*x1 + 0.010342*x2 + 59.471304*x3 + 76.571210*x4)
-  # pix = x/(1+x)
-  # return(pix)
-# }
+prob = function(x1,x2,x3,x4){
+  x = exp(-23.677816 + 0.362687*x1 + 0.010342*x2 + 59.471304*x3 + 76.571210*x4)
+  pix = x/(1+x)
+  return(pix)
+}
 ```
+
+======================================================================================
 
 
 ## Discriminant Analysis
-First we have to compute a two-sample Hotelling T-Squared test and compute Bartlett's test for homogeneous covariance matrices. We must now create separate data sets for Benign and Malignant tumors.
+First we have to compute a two-sample Hotelling T-Squared test and compute Bartlett's test for homogeneous covariance matrices.
 ```{r}
+# here we specfically choose only the means of the measure as the SE and Worst will not give us very much information
 can = cancer[,2:12]
-can
+
+# setting the independent variables into a matrix
 can.matrix = as.matrix(can[,2:11])
-can.matrix
 
 fit=manova(can.matrix ~ can$diagnosis)
 summary(fit, test="Hotelling-Lawley")
 
 library(ICSNP)
+# create separate data sets for Benign and Malignant tumors.
 cancer1 <- can[can[,1]=="M",2:11]
 cancer2 <- can[can[,1]=="B",2:11]
 
@@ -178,50 +170,55 @@ n2 = dim(cancer2)[1]
 source("Box_M.R")
 Box_M(can.matrix, n=c(n1, n2))
 ```
+here we see that we do not have equal covariance and so we'll be using QDA instead of LDA for better performance/accuracy
 
+# discriminant analysis with all 10 variable
 ```{r}
 library(MASS)
+# spliting the data into 2 set, training and testing
+training_sample <- sample(c(TRUE, FALSE), nrow(can), replace = T, prob = c(0.6,0.4))
+cantrain <- can[training_sample, ]
+cantest <- can[!training_sample, ]
 
-cancer.lda <- lda(diagnosis ~ radius_mean+texture_mean+perimeter_mean+area_mean+smoothness_mean+compactness_mean+concavity_mean+concave_points_mean+symmetry_mean+fractal_dimension_mean, data=can, CV=FALSE)
-cancer.lda
+# the model
+cancer.qda <- qda(diagnosis ~ radius_mean+texture_mean+perimeter_mean+area_mean+smoothness_mean+compactness_mean+concavity_mean+concave_points_mean+symmetry_mean+fractal_dimension_mean, data=cantrain, CV=FALSE)
+cancer.qda
 ```
 ```{r}
-Sp = (cov(cancer1) + cov(cancer2))/2
-mean.1 = colMeans(cancer1)
-mean.2 = colMeans(cancer2)
-a = solve(Sp)%*%(mean.1-mean.2)
-
-cancer.lda$scaling/a
-table(can$diagnosis, predict(cancer.lda)$class)
+table(cantrain$diagnosis, predict(cancer.qda)$class)
 ```
-```{r}
-# cross-validation
-cvcancer.lda <- lda(diagnosis ~ radius_mean+texture_mean+perimeter_mean+area_mean+smoothness_mean+compactness_mean+concavity_mean+concave_points_mean+symmetry_mean+fractal_dimension_mean, data=can, CV=TRUE)
-table(can$diagnosis, cvcancer.lda$class)
-```
-
 
 # Discriminant analysis with the significant variables
 ```{r}
 library(MASS)
+# splitting data into 2sets, training and testing
 can2 = can[,c(1,3,5,6,9)]
-cancer3 <- can2[can2[,1]=="M",2:5]
-cancer4 <- can2[can2[,1]=="B",2:5]
+training_sample2 <- sample(c(TRUE, FALSE), nrow(can2), replace = T, prob = c(0.6,0.4))
+cantrain2 <- can2[training_sample2, ]
+cantest2 <- can2[!training_sample2, ]
 
-cancer.lda2 <- lda(diagnosis ~ ., data=can2, CV=FALSE)
-cancer.lda2
+# the model
+cancer.qda2 <- qda(diagnosis ~ ., data=cantrain2, CV=FALSE)
+cancer.qda2
 ```
 ```{r}
-Sp = (cov(cancer3) + cov(cancer4))/2
-mean.3 = colMeans(cancer3)
-mean.4 = colMeans(cancer4)
-a = solve(Sp)%*%(mean.3-mean.4)
+# to get some visual of the data
+partimat(diagnosis ~ ., data=cantrain2, method="qda")
 
-cancer.lda2$scaling/a
-# predict(cancer.lda2)$class
-# can2$diagnosis
-table(can2$diagnosis, predict(cancer.lda2)$class)
+# QDA prediction
+table(cantrain2$diagnosis, predict(cancer.qda2)$class)
 ```
+comparing the two different DA we did on the full data and reduced data, the two are very close to each other and so we'll be working with the reduced model
+Also we see that this model fits the training set very well
+
+```{r}
+# testing the accuracy of our model
+qda.test <- predict(cancer.qda2,cantest2)
+cantest2$qda <- qda.test$class
+table(cantest2$qda,cantest2$diagnosis)
+```
+here we see that the model correctly predicted the class of observation 90% (211/234) which is really good
+and so to determine cancer type we can look at the following four variables: texture mean, area mean, smoothness mean and concave points mean.
 
 
 # Discriminant Analysis with the significant variables Continued
@@ -234,7 +231,7 @@ crossprod(cancer.lda2$scaling, Sp) %*% cancer.lda2$scaling
 
 (canmu.d = cancer.lda2$means)
 (canmu = colMeans(canmu.d))
-can2[,1:4]
+can2[,1:5]
 #Attempt at getting the discriminant scores
 (dscores <- scale(can2[,2:5], center=canmu, scale=F) %*% cancer.lda2$scaling)
 predict(cancer.lda2)$x

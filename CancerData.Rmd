@@ -175,7 +175,7 @@ Box_M(can.matrix, n=c(n1, n2))
 ```
 here we see that we do not have equal covariance and so we'll be using QDA instead of LDA for better performance/accuracy
 
-# discriminant analysis with all 10 variable
+# discriminant analysis with all 10 variables
 ```{r}
 library(MASS)
 # spliting the data into 2 set, training and testing
@@ -194,20 +194,18 @@ confusionTest
 n <- sum(confusionTest)
 aer <- (n - sum(diag(confusionTest))) / n
 aer
-
-#Plot
-
 ```
 #Plot
 ```{r}
 library(klaR)
 cantype <- factor(rep(c("M","B"), each=150))
-partimat(formula = diagnosis~radius_mean+texture_mean+perimeter_mean+area_mean+smoothness_mean+compactness_mean+concavity_mean+concave_points_mean+symmetry_mean+fractal_dimension_mean, data=can, method="qda")
+partimat(diagnosis ~ ., data=can, method="qda")
+#partimat(formula = diagnosis~radius_mean+texture_mean+perimeter_mean+area_mean+smoothness_mean+compactness_mean+concavity_mean+concave_points_mean+symmetry_mean+fractal_dimension_mean, data=can, method="qda")
 ```
 
 
 ```{r}
-table(cantrain$diagnosis, predict(cancer.qda)$class)
+#table(cantrain$diagnosis, predict(cancer.qda)$class)
 ```
 
 # Discriminant analysis with the significant variables
@@ -225,10 +223,8 @@ cancer.qda2
 ```
 ```{r}
 # to get some visual of the data
-partimat(diagnosis ~ ., data=cantrain2, method="qda")
+partimat(diagnosis ~ ., data=can2, method="qda")
 
-# QDA prediction
-table(cantrain2$diagnosis, predict(cancer.qda2)$class)
 ```
 comparing the two different DA we did on the full data and reduced data, the two are very close to each other and so we'll be working with the reduced model
 Also we see that this model fits the training set very well
@@ -237,7 +233,11 @@ Also we see that this model fits the training set very well
 # testing the accuracy of our model
 qda.test <- predict(cancer.qda2,cantest2)
 cantest2$qda <- qda.test$class
-table(cantest2$qda,cantest2$diagnosis)
+confusionTest<-table(cantest2$qda,cantest2$diagnosis)
+
+n <- sum(confusionTest)
+aer <- (n - sum(diag(confusionTest))) / n
+aer
 ```
 here we see that the model correctly predicted the class of observation 90% (211/234) which is really good
 and so to determine cancer type we can look at the following four variables: texture mean, area mean, smoothness mean and concave points mean.
@@ -248,18 +248,18 @@ and so to determine cancer type we can look at the following four variables: tex
 p=4
 g=2
 
-cancer.lda2$scaling
-crossprod(cancer.lda2$scaling, Sp) %*% cancer.lda2$scaling
+cancer.qda2$scaling
+crossprod(cancer.qda2$scaling, Sp) %*% cancer.qda2$scaling
 
-(canmu.d = cancer.lda2$means)
+(canmu.d = cancer.qda2$means)
 (canmu = colMeans(canmu.d))
 can2[,1:5]
 #Attempt at getting the discriminant scores
-(dscores <- scale(can2[,2:5], center=canmu, scale=F) %*% cancer.lda2$scaling)
-predict(cancer.lda2)$x
-(canid = as.integer(predict(cancer.lda2)$class))
+(dscores <- scale(can2[,2:5], center=canmu, scale=F) %*% cancer.qda2$scaling)
+predict(cancer.qda2)$x
+(canid = as.integer(predict(cancer.qda2)$class))
 
-plot(dscores, xlab="LD1",ylab = "Scores", pch=canid, col=canid,
+plot(dscores, xlab="QD1",ylab = "Scores", pch=canid, col=canid,
 main="Discriminant Scores", xlim=c(1, 569), ylim=c(-3, 6))
 legend("top",lev,pch=1:2,col=1:2,bty="n", legend = c("M","B"))
 ```

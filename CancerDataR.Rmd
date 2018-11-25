@@ -3,12 +3,11 @@ title: "CancerDataR"
 author: "Minhaz Khan, Truman Zheng, Navin Chandradat, Vincent La, Bobak Ahmar"
 date: "11/13/2018"
 output:
-  pdf_document: default
   html_document:
     df_print: paged
 ---
 
-## Tasks:
+# Tasks:
 summary of data, introduction - Truman
 
 Organizing presentation - everyone
@@ -20,7 +19,7 @@ Anaylizing data/coding - Truman, Minhaz, Vincent
 Putting everything together/conclusions/report - Navin, Bobak
 
 
-## introduction
+# introduction
 Breast cancer is a malignant cell growth in the breast. If it is left untreated the cancer can spread to other parts of the human body and it can be very deadly. 
 There are generally two type of tumors non-cancerous and cancerous and the difference between the two is important, Benign tumor is non-cancerous and not dangerous on its own, but a malignant tumor, means the mass is cancerous.
 
@@ -34,7 +33,7 @@ We are given the following:
 	-The mean, standard error and "worst" or largest (mean of the three largest values) of these features were computed for each image, resulting in 30 features
 	-Class distribution: 357 benign, 212 malignant
 
-# summary of the data
+## summary of the data
 we first take a small look at the data set and loading library/files we will need
 ```{r}
 # all the library and files we'll be using
@@ -42,7 +41,6 @@ library(tidyverse)
 library(gridExtra)
 library(ICSNP)
 library(MASS)
-library(klaR)
 source("Box_M.R")
 ```
 
@@ -66,7 +64,7 @@ num_obs
 table(cancer$diagnosis)
 ```
 
-# some visuals of the data
+## some visuals of the data
 standard errors vs worst cases
 ```{r}
 #Obtaining the standard errors and worst cases.
@@ -121,15 +119,11 @@ x9 = ggplot(new3, aes(x=diagnosis, y=symmetry_se))+geom_boxplot()
 x10 = ggplot(new3, aes(x=diagnosis, y=fractal_dimension_se))+geom_boxplot()
 grid.arrange(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,ncol=4)
 ```
-## methods
-# Chi Square plot
+# methods
+## Chi Square plot
 before we start any analysis we want to verify the normallity of the data
 ```{r}
 source("ChisqPlot.R")
-can = cancer[,2:12]
-
-# setting the independent variables into a matrix
-can.matrix = as.matrix(can[,2:11])
 chisqplot(can.matrix)
 ```
 becuase our data have a very large sample, I would say the normallity assumption here is fine.
@@ -200,7 +194,7 @@ Box_M(can.matrix, n=c(n1, n2))
 here we see that we do not have equal covariance and so we'll be using QDA instead of LDA for better performance/accuracy
 
 
-# discriminant analysis with all 10 variables
+## discriminant analysis with all 10 variables
 we first start with all 10 variables just so we can have a comparison later with the reduced model
 ```{r}
 
@@ -222,7 +216,7 @@ aer <- (n - sum(diag(confusionTest))) / n
 aer
 ```
 
-# Discriminant analysis with the significant variables
+## Discriminant analysis with the significant variables
 we now do the same thing but with the reduced model
 ```{r}
 # splitting data into 2sets, training and testing
@@ -253,5 +247,5 @@ this also however tells us that with only 4 variables, texture mean, area mean, 
 partimat(diagnosis ~ ., data=can2, method="qda")
 ```
 
-## conclusion
+# conclusion
 From the two analysis we done, from discriminant analysis to simply fitting a generalized linear model we can clearly conclude that the dependent variable cancer type or diagnosis hugely depend on simply four variables, that is, it's mainly depend on texture mean, area mean, smoothness mean and concave points mean and from these four variables we can determine the odds patient's cancer type and so from that can determine whether treatment are neccessary.

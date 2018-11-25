@@ -1,0 +1,87 @@
+---
+title: "Cancer Report"
+output: pdf_document
+---
+
+Intro
+
+	Breast cancer is a malignant cell growth in the breast. If it is left untreated the cancer can spread to other parts of the human body and it can be very deadly. 
+There are generally two type of tumors non-cancerous and cancerous and the difference between the two is important, Benign tumor is non-cancerous and not dangerous on its own, but a malignant tumor, means the mass is cancerous.
+
+-First we open the file containing the Breast Cancer Wisconsin (Diagnostic) Data Set
+
+-Our goal is to predict whether the cancer is benign or malignant 
+-We are given the following:
+	-Attribute Information: 1) ID number 2) Diagnosis (M = malignant, B = benign) 3-32)
+
+	-a) radius (mean of distances from center to points on the perimeter) b) texture (standard deviation of gray-scale values) c) perimeter d) area e) smoothness (local variation in radius lengths) f)compactness (perimeter^2 / area - 1.0) g) concavity (severity of concave portions of the contour) h) concave points (number of concave portions of the contour) i) symmetry j) fractal dimension("coastline approximation" - 1)
+
+	-The mean, standard error and "worst" or largest (mean of the three largest values) of these features were computed for each image, resulting in 30 features
+	-Class distribution: 357 benign, 212 malignant
+
+PCA
+
+	After finding the *number of variables, *observations, and *number of each type of tumor, we then attempt to perform principal component analysis (PCA) on the data. 
+Reasoning behind attempting the procedure is as follows - in PCA we create new variables which are linear combinations of the old ones. These new variables should be uncorrelated, so we don't have any redundant information. 
+We'll choose only the first m variables, in a way that accounts for as much variation as possible. In our data, we showed that there are a lot of variables that are highly correlated, so we will get rid of them. 
+The data is in different scales (area mean and texture_worst are very far out) so we need to do the analysis on the correlation matrix.
+
+-From the scree plot, the elbow of the plot is the third PC but according to the correlation with the variables and its proportion of variance, it's insignificant, so we work with first 2 PCAs
+***Insert screeplot(pca1,type = 'l')
+
+-Finding  the  principal  components  (or  PCs)  is  often an early step in a complex analysis.  Scores for sample PCs can be used to fit MANOVA or regression models,to  cluster sample  units or to  build  classification  rule	
+
+	Following we got the variance, standard errors, and worse cases to set up a data frame for each of the possible properties of the breast. 
+***insert rcode
+
+-Looking at the first plot of texture's worst against standard errors, we can see non constant variance due to the cone shape of the data.
+***insert x4<-ggplot(df_texture, aes(x=text_worst, y = text_se))+geom_point()
+
+
+-We see that again there is a cone shape in the plot of smoothness worst vs standard error
+
+
+-Looking at the data, most points are near the the origin. However, the further stages in cancer seem to have higher standard errors. Also, most of the properties seem to follow a slightly curved distribution.
+***Insert grid.arrange(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,ncol=3)
+
+LINEAR MODEL
+
+	We then fitted a generalized linear model. With this, we can determine which variable are actually important to the result and which have next to no impact on the result
+-After reviewing the summary of the generalized linear model we look at the coefficients, we have estimate, SE, z-score, and p-value, the p-value that is less than 0.05 indicates significance, that is those variable has an impact on either cancer being M or B 
+
+***Insert summary(glm.fit)
+-example: for a unit increase in texture mean the log odd of cancer being M (vs B) increases by 0.38473
+
+We then created a new model rid of insignificant variables
+***Insert summary(glm.fit2)
+
+
+
+LDA
+
+	Here we used Discriminant Analysis on the Breast Cancer data set. First we start with linear discriminant analysis (LDA).
+LDA is a way to reduce 'dimensionality' while preserving as much of the class discrimination information as possible. 
+Our goal is to separate distinct set of objects to find derived variables (discriminant) => dl = hl(X), l =1,..,g
+that show "optimal separation" between groups.
+
+Our setup here is: 
+-10 real valued variables (30 in total) measured on 569 sample units (357 benign and 212 malignant)
+-"training" data set with group membership indicated for each subject must be present 
+- assume normality of the two populations 
+
+
+First we computed the two-sample Hotelling T-Squared test and Bartlett's test for homogeneous covariance matrices. 
+We then created separate data sets for Benign and Malignant tumors.
+Next we then used cross validation (leave one-out method) to assess performance.  
+
+-Here we specifically choose only the means of the measure as the SE and Worst will not give us very much information
+***insert can = cancer[,2:12]
+
+-after setting the independent variables into a matrix we created separate data sets for benign and malignant tumors
+-here we see that we do not have equal covariance and so we'll be using QDA instead of LDA for better performance/accuracy
+
+QDA
+
+	Splitting the data into 2 set, training and testing we continue with quadratic discriminant analysis(QDA).
+We then performed the confusion test.
+

@@ -63,7 +63,12 @@ table(cancer$diagnosis)
 
 ## PCA
 Attempt to perform PCA on the data. Reasoning behind attempting the procedure is
-as follows - in PCA we create new variables which are linear combinations of the old ones. These new variables should be uncorrelated, so we don't have any redundant information. We'll choose only the first m variables, in a way that accounts for as much variation as possible. In our data, we showed that there are a lot of variables that are highly correlated, so we will get rid of them. The data is in different scales (area mean and texture_worst are very far out) so we need to do the analysis on the correlation matrix.
+as follows - in PCA we create new variables which are linear combinations of the old ones. 
+These new variables should be uncorrelated, so we don't have any redundant information. We'll choose only the first m variables, in a 
+way that accounts for as much variation as possible. In our data, we showed that there are a lot of variables that are highly 
+correlated, so we will get rid of them. The data is in different scales (area mean and texture_worst are very far out) so we need to do 
+the analysis on the correlation matrix.
+
 ```{r}
 pca1 = prcomp(filcancer, scale=TRUE)
 summary(pca1)
@@ -105,7 +110,7 @@ df_concave_points = data.frame(cbind(concave_worst=worst_data$concave_points_wor
 df_symmetry = data.frame(cbind(symm_worst=worst_data$symmetry_worst,symm_se=se_data$symmetry_se))
 df_dimension = data.frame(cbind(dim_worst=worst_data$fractal_dimension_worst,dim_se = se_data$fractal_dimension_se))
 
-
+#Setting up the plots of the categories.
 x1<-ggplot(df_radius, aes(x=rad_worst, y = rad_se))+geom_point()
 x2<-ggplot(df_perimeter, aes(x=peri_worst, y = peri_se))+geom_point()
 x3<-ggplot(df_area, aes(x=area_worst, y = area_se))+geom_point()
@@ -115,10 +120,13 @@ x4<-ggplot(df_texture, aes(x=text_worst, y = text_se))+geom_point()
 x5<-ggplot(df_smoothness, aes(x=smooth_worst, y = smooth_se))+geom_point()
 x6<-ggplot(df_compact, aes(x=compact_worst, y = compact_se))+geom_point()
 x7<-ggplot(df_concavity, aes(x=concavity_worst, y = concavity_se))+geom_point()
+# the data in symmetry seems to be extremely concentrated near the center, with a few large outliers.
 x8<-ggplot(df_symmetry, aes(x=symm_worst, y = symm_se))+geom_point()
+# The data in concave points seems to be more evenly spread out than the other plots.
 x9<-ggplot(df_concave_points, aes(x=concave_worst, y = concave_se))+geom_point()
 x10<-ggplot(df_dimension, aes(x=dim_worst, y = dim_se))+geom_point()
-#Looking at the data, most points are near the the origin. However, the further stages in cancer seem to have higher standard errors. Also, most of the properties seem to follow a slightly curved distribution.
+#Looking at the data, most points are near the the origin. However, the further stages in cancer seem to have higher standard errors. 
+#Also, most of the properties seem to follow a slightly curved distribution.
 grid.arrange(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,ncol=3)
 ```
 

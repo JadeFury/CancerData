@@ -34,7 +34,7 @@ We are given the following:
 	-The mean, standard error and "worst" or largest (mean of the three largest values) of these features were computed for each image, resulting in 30 features
 	-Class distribution: 357 benign, 212 malignant
 
-## summary of the data
+# summary of the data
 we first take a small look at the data set and loading library/files we will need
 ```{r}
 # all the library and files we'll be using
@@ -66,8 +66,8 @@ num_obs
 table(cancer$diagnosis)
 ```
 
-## some visuals of the data
-# standard errors vs worst cases
+# some visuals of the data
+standard errors vs worst cases
 ```{r}
 #Obtaining the standard errors and worst cases.
 filcancer1=cancer[-1:-2]
@@ -104,7 +104,7 @@ x10<-ggplot(df_dimension, aes(x=dim_worst, y = dim_se))+geom_point()
 grid.arrange(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,ncol=3)
 ```
 
-# boxplot of the SEs
+boxplot of the SEs
 ```{r}
 new = cancer[-1]
 new2 = new[,-c(2:11)]
@@ -121,8 +121,8 @@ x9 = ggplot(new3, aes(x=diagnosis, y=symmetry_se))+geom_boxplot()
 x10 = ggplot(new3, aes(x=diagnosis, y=fractal_dimension_se))+geom_boxplot()
 grid.arrange(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,ncol=4)
 ```
-
-## Chi Square plot
+## methods
+# Chi Square plot
 before we start any analysis we want to verify the normallity of the data
 ```{r}
 source("ChisqPlot.R")

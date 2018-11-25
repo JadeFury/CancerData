@@ -2,7 +2,9 @@
 title: "CancerDataR"
 author: "Minhaz Khan, Truman Zheng, Navin Chandradat, Vincent La, Bobak Ahmar"
 date: "11/13/2018"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 ## Tasks:
@@ -23,6 +25,13 @@ There are generally two type of tumors non-cancerous and cancerous and the diffe
 
 Our goal for this project is to predict whether the cancer is benign or malignant and to determine what actually contribute to the classification of the two types
 
+We are given the following:
+	-Attribute Information: 1) ID number 2) Diagnosis (M = malignant, B = benign) 3-32)
+
+	-a) radius (mean of distances from center to points on the perimeter) b) texture (standard deviation of gray-scale values) c) perimeter d) area e) smoothness (local variation in radius lengths) f)compactness (perimeter^2 / area - 1.0) g) concavity (severity of concave portions of the contour) h) concave points (number of concave portions of the contour) i) symmetry j) fractal dimension("coastline approximation" - 1)
+
+	-The mean, standard error and "worst" or largest (mean of the three largest values) of these features were computed for each image, resulting in 30 features
+	-Class distribution: 357 benign, 212 malignant
 
 ## summary of the data
 we first take a small look at the data set and loading library/files we will need
@@ -238,3 +247,5 @@ this also however tells us that with only 4 variables, texture mean, area mean, 
 partimat(diagnosis ~ ., data=can2, method="qda")
 ```
 
+## conclusion
+From the two analysis we done, from discriminant analysis to simply fitting a generalized linear model we can clearly conclude that the dependent variable cancer type or diagnosis hugely depend on simply four variables, that is, it's mainly depend on texture mean, area mean, smoothness mean and concave points mean and from these four variables we can determine the odds patient's cancer type and so from that can determine whether treatment are neccessary.

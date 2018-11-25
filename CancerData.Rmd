@@ -31,6 +31,7 @@ Breast cancer is a malignant cell growth in the breast. If it is left untreated 
 We want to verify MVN, in order to do so we want to construct a Chi Square plot:
 ```{r}
 source("ChisqPlot.R")
+
 chisqplot(can.matrix)
 ```
 

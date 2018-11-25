@@ -27,6 +27,14 @@ Putting everything together/conclusions - Navin, Bobak
 ## Introduction
 Breast cancer is a malignant cell growth in the breast. If it is left untreated the cancer can spread to other parts of the human body and it can be very deadly. There are generally two type of tumors non-cancerous and cancerous and the difference between the two is important, Benign tumor is non-cancerous and not dangerous on its own, but a malignant tumor, means the mass is cancerous.
 
+## Chi Square plot
+We want to verify MVN, in order to do so we want to construct a Chi Square plot:
+```{r}
+source("ChisqPlot.R")
+chisqplot(can.matrix)
+```
+
+
 
 ## summary of the data
 ```{r}

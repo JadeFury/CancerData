@@ -201,7 +201,7 @@ table(can$diagnosis, cvcancer.lda$class)
 ```
 
 
-#Discriminant analysis with the significant variables
+# Discriminant analysis with the significant variables
 ```{r}
 library(MASS)
 can2 = can[,c(1,3,5,6,9)]
@@ -222,14 +222,9 @@ cancer.lda2$scaling/a
 # can2$diagnosis
 table(can2$diagnosis, predict(cancer.lda2)$class)
 ```
-```{r}
-# cross-validation
-cvcancer.lda2 <- lda(diagnosis ~ ., data=can2, CV=TRUE)
-table(can2$diagnosis, cvcancer.lda2$class)
-```
 
 
-Discriminant Analysis with the significant variables Continued
+# Discriminant Analysis with the significant variables Continued
 ```{r}
 p=4
 g=2

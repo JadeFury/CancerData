@@ -111,6 +111,13 @@ x10 = ggplot(new3, aes(x=diagnosis, y=fractal_dimension_se))+geom_boxplot()
 grid.arrange(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,ncol=4)
 ```
 
+## Chi Square plot
+before we start any analysis we want to verify the normallity of the data
+```{r}
+source("ChisqPlot.R")
+chisqplot(can.matrix)
+```
+becuase our data have a very large sample, I would say the normallity assumption here is fine.
 
 ## fitting a generalized linear model
 we first starts of by fitting a generalized linear model to assess the significance of each of the variables. 

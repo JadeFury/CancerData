@@ -45,7 +45,7 @@ Class distribution: 357 benign, 212 malignant
 
 ## summary of the data
 we first take a small look at the data set and loading library/files we will need
-```{r}
+```{r, results='hide',message=FALSE}
 # all the library and files we'll be using
 library(tidyverse)
 library(gridExtra)
@@ -58,7 +58,7 @@ source("Box_M.R")
 ```{r}
 # preview of the data
 cancer = read.csv("Project3-Data.csv")
-head(cancer)
+head(cancer[1:5])
 ```
 
 ```{r}
@@ -77,7 +77,7 @@ table(cancer$diagnosis)
 
 ## some visuals of the data
 standard errors vs worst cases
-```{r}
+```{r, collapse=TRUE}
 # filter out the first 2 columns
 filcancer1=cancer[-1:-2]
 
@@ -97,8 +97,8 @@ x10<-ggplot(filcancer1, aes(x=fractal_dimension_worst, y = fractal_dimension_se)
 grid.arrange(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,ncol=3)
 ```
 
-boxplot of the SEs
-```{r}
+##Boxplot of the SEs
+```{r, collapse=TRUE}
 new = cancer[-1]
 new2 = new[,-c(2:11)]
 new3 = new2[,-c(12:21)]

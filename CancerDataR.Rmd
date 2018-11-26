@@ -84,7 +84,8 @@ filcancer1=cancer[-1:-2]
 x1<-ggplot(filcancer1, aes(x=radius_worst, y = radius_se))+geom_point()
 x2<-ggplot(filcancer1, aes(x=perimeter_worst, y = perimeter_se))+geom_point()
 x3<-ggplot(filcancer1, aes(x=area_worst, y = area_se))+geom_point()
-#If we look at the first plot of texture's worst against standard errors, we can see non constant variance due to the cone shape of the data.
+#If we look at the first plot of texture's worst against standard errors, we can see
+#non constant variance due to the cone shape of the data.
 x4<-ggplot(filcancer1, aes(x=texture_worst, y = texture_se))+geom_point()
 #Again we have a cone shape in the plot of smoothness worst versus standard error.
 x5<-ggplot(filcancer1, aes(x=smoothness_worst, y = smoothness_se))+geom_point()
@@ -93,7 +94,9 @@ x7<-ggplot(filcancer1, aes(x=concavity_worst, y = concavity_se))+geom_point()
 x8<-ggplot(filcancer1, aes(x=symmetry_worst, y = symmetry_se))+geom_point()
 x9<-ggplot(filcancer1, aes(x=concave_points_worst, y = concave_points_se))+geom_point()
 x10<-ggplot(filcancer1, aes(x=fractal_dimension_worst, y = fractal_dimension_se))+geom_point()
-#Looking at the data, most points are near the the origin. However, the further stages in cancer seem to have higher standard errors. Also, most of the properties seem to follow a slightly curved distribution.
+#Looking at the data, most points are near the the origin. However, the further stages
+#in cancer seem to have higher standard errors. Also, most of the properties seem to
+#follow a slightly curved distribution.
 grid.arrange(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,ncol=3)
 ```
 
@@ -149,7 +152,7 @@ example: for a unit increase in texture mean the odd of cancer being M (vs B) in
 now that we know which of the variables are actually significant, we will fit the model again with only those significant variables
 ```{r}
 # new model after removing insignificant variables
-glm.fit2 = glm(diagnosis ~ texture_mean + area_mean + smoothness_mean + concave_points_mean, data=can, family=binomial)
+glm.fit2 = glm(diagnosis ~ ., data=can[,c(1,3,5,6,9)], family=binomial)
 
 summary(glm.fit2)
 ```
@@ -204,10 +207,11 @@ cantrain <- can[training_sample, ]
 cantest <- can[!training_sample, ]
 
 # the model
-cancer.qda <- qda(diagnosis ~ radius_mean+texture_mean+perimeter_mean+area_mean+smoothness_mean+compactness_mean+concavity_mean+concave_points_mean+symmetry_mean+fractal_dimension_mean, data=cantrain)
+cancer.qda <- qda(diagnosis ~ ., data=cantrain)
 cancer.qda
 
 #Confusion test
+set.seed(1)
 confusionTest <- table(cantest$diagnosis, predict(cancer.qda, newdata=cantest)$class)
 confusionTest
 
@@ -230,6 +234,7 @@ cancer.qda2 <- qda(diagnosis ~ ., data=cantrain2, CV=FALSE)
 cancer.qda2
 
 # testing the accuracy of our model
+set.seed(1)
 qda.test <- predict(cancer.qda2,cantest2)
 cantest2$qda <- qda.test$class
 confusionTest <-table(cantest2$qda,cantest2$diagnosis)

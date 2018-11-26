@@ -99,6 +99,13 @@ x10<-ggplot(filcancer1, aes(x=fractal_dimension_worst, y = fractal_dimension_se)
 #follow a slightly curved distribution.
 grid.arrange(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,ncol=3)
 ```
+If we look at all the graphs for each category for measuring breast cancer, we can see that most data points cluster quite near to the 
+origin, but not exactly on it. There are no data points at the origin since this would mean that the person has no reason to suspect 
+that they have breast cancer. If we now look at the
+the data points that are close to the center but not exactly,  these points might represent either benign tumours or early stage 
+malignant tumours, since these breasts don't really deviate that much from the average. If we look at the points further out, these 
+points are likely middle stage malignant tumours, since they deviate a sizeable amount. Now, looking at the outliers, we have reason to 
+suspect that these are late stage malignant tumours too, given the deformity of the breasts.
 
 ##Boxplot of the SEs
 ```{r, collapse=TRUE}

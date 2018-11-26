@@ -3,6 +3,7 @@ title: "CancerDataR"
 author: "Minhaz Khan, Truman Zheng, Navin Chandradat, Vincent La, Bobak Ahmar"
 date: "11/13/2018"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 ---

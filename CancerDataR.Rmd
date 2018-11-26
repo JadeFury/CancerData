@@ -133,7 +133,8 @@ can = cancer[,2:12]
 can.matrix = as.matrix(can[,2:11])
 chisqplot(can.matrix)
 ```
-because our data have a very large sample, I would say the normality assumption here is fine.
+
+Because our data have a very large sample, I would say the normality assumption here is fine.
 
 ## fitting a generalized linear model
 we first starts of by fitting a generalized linear model to assess the significance of each of the variables. 

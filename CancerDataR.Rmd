@@ -249,7 +249,7 @@ aer <- (n - sum(diag(confusionTest))) / n
 aer
 ```
 Taking a look at the errors of the two model, full vs reduced we see that the difference between the 2 is negligible (the AER for the two are very close).
-This also however tells us that with only 4 variables, texture mean, area mean, smoothness mean and concave points mean we can accurately predict 90% of the class of observation which is very good.
+This also however tells us that with only 4 variables, texture mean, area mean, smoothness mean and concave points mean we can accurately predict about 93% of the class of observation which is very good.
 
 ```{r}
 # here are just some more visuals of the data

@@ -137,7 +137,7 @@ chisqplot(can.matrix)
 Because our data have a very large sample, I would say the normality assumption here is fine.
 
 ## Fitting a generalized linear model
-we first starts of by fitting a generalized linear model to assess the significance of each of the variables. 
+We first starts off by fitting a generalized linear model to assess the significance of each of the variables. 
 here we are only dealing with the "mean" variables as we believe that the other two category "standard error" and "worst" will not give us much information regarding the type of cancer.
 ```{r}
 # taking the mean values
@@ -151,7 +151,7 @@ glm.fit = glm(diagnosis ~ ., data=can, family=binomial)
 
 summary(glm.fit)
 ```
-Theres various information in the summary but look at the coefficients, we have estimate, SE, z-score, and p-value, the p-value that is less than 0.05 indicates significance, that is those variable has an impact on either cancer being M or B.
+Theres various information in the summary but looking at the coefficients, we have estimate, SE, z-score, and p-value, the p-value that is less than 0.05 indicates significance, that is those variables has an impact on either cancer being M or B.
 Example: for a unit increase in texture mean the odd of cancer being M (vs B) increases by exp(0.38473).
 
 Now that we know which of the variables are actually significant, we will fit the model again with only those significant variables.
@@ -176,7 +176,7 @@ prob = function(x1,x2,x3,x4){
 ## Discriminant Analysis
 Now we shall take a look at another method, here we use discriminant analysis, Discriminant analysis is a technique that is used to analyze the research data when the criterion or the dependent variable is categorical and the predictor or the independent variable is interval in nature (which is what we have here).
 
-First we have to compute a two-sample Hotelling T-Squared test and compute Bartlett's test for homogeneous covariance matrices. with this we can determine whether or not to use Linear DA or quadratic DA as one requires equal covariance and the other one does not (LDA require equal covariance).
+First we have to compute a two-sample Hotelling T-Squared test and compute Bartlett's test for homogeneous covariance matrices. with this we can determine whether or not to use Linear DA or Quadratic DA as one requires equal covariance and the other one does not (LDA require equal covariance).
 ```{r}
 # again we are only working with the means
 can = cancer[,2:12]
@@ -248,14 +248,14 @@ n <- sum(confusionTest)
 aer <- (n - sum(diag(confusionTest))) / n
 aer
 ```
-Taking a look at the errors of the two model, full vs reduced we see that the difference between the 2 is negligible (the AER for the two are very close).
+Taking a look at the errors of the two models, full vs reduced we see that the difference between the 2 is negligible (the AER for the two are very close).
 This also however tells us that with only 4 variables, texture mean, area mean, smoothness mean and concave points mean we can accurately predict about 93% of the class of observation which is very good.
 
 ```{r}
 # here are just some more visuals of the data
 partimat(diagnosis ~ ., data=can2, method="qda")
 ```
-From this we can also confirm that the accuracy of our model is indeed good.
+From the above graph, we see that there are black and red labels, the black labels indicates correct prediction and the red one indicates incorrect prediction, thus from this we confirmed that the accuracy of our model is indeed good.
 
 # Conclusion
 From the two analysis we done, from discriminant analysis to simply fitting a generalized linear model we can clearly conclude that the dependent variable cancer type or diagnosis hugely depend on simply four variables, that is, it's mainly depend on texture mean, area mean, smoothness mean and concave points mean and from these four variables we can determine the odds patient's cancer type and so from that can determine whether treatment are neccessary.
